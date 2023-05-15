@@ -10,6 +10,10 @@ import java.util.Scanner;
 
 public class Main {
 
+
+    static int maxConnectionsInPool = 5;
+    static int numberOfThreads = 50;
+
     private static ArrayList<Thread> _allThreads = new ArrayList<>();
 
     public static String getDataBasePathFromResources(String fileName) throws URISyntaxException {
@@ -45,7 +49,7 @@ public class Main {
                 break;
         }
         
-        ConnectionPool.set_maxConnectionsNumber(1);
+        ConnectionPool.set_maxConnectionsNumber(maxConnectionsInPool);
         ConnectionPool pool = ConnectionPool.getInstance();
 
 
@@ -73,10 +77,9 @@ public class Main {
             finally {
                 pool.returnConnection(dba.returnConnection());
             }
-
         };
 
-        for(int i = 0; i < 10; i++) {
+        for(int i = 0; i < numberOfThreads; i++) {
             Thread t = new Thread(r, "Thread " + (i+1));
             _allThreads.add(t);
             t.start();
